@@ -44,8 +44,6 @@ class Task
         $this->updated_at = new \DateTime();
     }
 
-    // ... autres méthodes ...
-
     public function getId(): ?int
     {
         return $this->id;

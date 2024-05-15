@@ -104,7 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Si vous stockez des données sensibles temporaires, les effacer ici
+        //info bonus confidentiel voir si ajout
     }
 
     public function getTeams(): Collection

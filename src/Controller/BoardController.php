@@ -24,7 +24,6 @@ class BoardController extends AbstractController
     #[Route('/new', name: 'app_board_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Vérifiez si l'utilisateur est connecté
         if (!$this->getUser()) {
             $this->addFlash('error', 'Vous devez être connecté pour créer un board.');
             return $this->redirectToRoute('app_login');
@@ -37,7 +36,7 @@ class BoardController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $board->setUser($this->getUser()); // Associez l'utilisateur connecté au board
+            $board->setUser($this->getUser());
             $entityManager->persist($board);
             $entityManager->flush();
 
