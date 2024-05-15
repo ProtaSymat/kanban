@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+<section class="bg-white">
+    <div class="container py-5">
+        <h1>Mon compte</h1>
+
+        <h2>Informations de l'utilisateur</h2>
+    <p><strong>UUID:</strong> {{ user.uuid }}</p>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.identity.email }}</p>
+    <p><strong>First Name:</strong> {{ user.identity.firstName }}</p>
+
+
+        <h2>Équipes</h2>
+        {% if user.teams is not empty %}
+            <ul>
+                {% for team in user.teams %}
+                    <li>{{ team.name }} - Statut: {{ team.status }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Vous ne faites partie d'aucune équipe.</p>
+        {% endif %}
+
+        <h2>Boards</h2>
+          <ul>
+        {% for board in boards %}
+            <li>{{ board.title }}</li>
+        {% endfor %}
+    </ul>
+
+        <a href="{{ path('app_logout') }}" class="btn btn-danger">Déconnexion</a>
+    </div>
+</section>
+{% endblock %}

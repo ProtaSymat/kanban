@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Board;
@@ -9,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/board')]
 class BoardController extends AbstractController
@@ -25,11 +24,20 @@ class BoardController extends AbstractController
     #[Route('/new', name: 'app_board_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Vérifiez si l'utilisateur est connecté
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer un board.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $board = new Board();
+        $board->setCreatedAt(new \DateTime());
+
         $form = $this->createForm(BoardType::class, $board);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $board->setUser($this->getUser()); // Associez l'utilisateur connecté au board
             $entityManager->persist($board);
             $entityManager->flush();
 
@@ -38,7 +46,7 @@ class BoardController extends AbstractController
 
         return $this->render('board/new.html.twig', [
             'board' => $board,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -71,7 +79,7 @@ class BoardController extends AbstractController
     #[Route('/{id}', name: 'app_board_delete', methods: ['POST'])]
     public function delete(Request $request, Board $board, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$board->getId(), $request->getPayload()->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $board->getId(), $request->request->get('_token'))) {
             $entityManager->remove($board);
             $entityManager->flush();
         }

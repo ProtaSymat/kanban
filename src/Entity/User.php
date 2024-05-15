@@ -1,12 +1,9 @@
-<?php
-
+<?php 
 namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -14,7 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UUID', fields: ['uuid'])]
 #[UniqueEntity(fields: ['uuid'], message: 'There is already an account with this uuid')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -23,24 +19,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $uuid = null;
 
-    /**
-     * @var list<string> The user roles
-     */
+    #[ORM\Column(length: 180, unique: true)]
+    private ?string $username = null;
+
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
-    /**
-     * @var Collection<int, Team>
-     */
     #[ORM\ManyToMany(targetEntity: Team::class, mappedBy: 'users')]
     private Collection $teams;
 
@@ -50,26 +40,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $updatedAt = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $username = null;
-
-    /**
-     * @var Collection<int, UserHistory>
-     */
-    #[ORM\OneToMany(targetEntity: UserHistory::class, mappedBy: 'entity')]
-    private Collection $userHistories;
 
     public function __construct()
     {
         $this->teams = new ArrayCollection();
-        $this->userHistories = new ArrayCollection();
     }
+
+    // Getters and setters...
 
     public function getId(): ?int
     {
@@ -81,90 +63,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->uuid;
     }
 
-    public function setUuid(string $uuid): static
+    public function setUuid(string $uuid): self
     {
         $this->uuid = $uuid;
 
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->uuid;
     }
 
-    /**
-     * @see UserInterface
-     *
-     * @return list<string>
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // Si vous stockez des données sensibles temporaires, les effacer ici
     }
 
-    /**
-     * @return Collection<int, Team>
-     */
     public function getTeams(): Collection
     {
         return $this->teams;
     }
 
-    public function addTeam(Team $team): static
+    public function addTeam(Team $team): self
     {
         if (!$this->teams->contains($team)) {
-            $this->teams->add($team);
+            $this->teams[] = $team;
             $team->addUser($this);
         }
 
         return $this;
     }
 
-    public function removeTeam(Team $team): static
+    public function removeTeam(Team $team): self
     {
         if ($this->teams->removeElement($team)) {
             $team->removeUser($this);
@@ -178,7 +136,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->identity;
     }
 
-    public function setIdentity(?Identity $identity): static
+    public function setIdentity(?Identity $identity): self
     {
         $this->identity = $identity;
 
@@ -190,7 +148,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
@@ -202,7 +160,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -214,7 +172,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -226,39 +184,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(string $username): self
     {
         $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, UserHistory>
-     */
-    public function getUserHistories(): Collection
-    {
-        return $this->userHistories;
-    }
-
-    public function addUserHistory(UserHistory $userHistory): static
-    {
-        if (!$this->userHistories->contains($userHistory)) {
-            $this->userHistories->add($userHistory);
-            $userHistory->setEntity($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserHistory(UserHistory $userHistory): static
-    {
-        if ($this->userHistories->removeElement($userHistory)) {
-            // set the owning side to null (unless already changed)
-            if ($userHistory->getEntity() === $this) {
-                $userHistory->setEntity(null);
-            }
-        }
 
         return $this;
     }

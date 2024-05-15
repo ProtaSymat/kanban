@@ -3,3 +3,26 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+contact:
+    path: /contact
+    controller: App\Controller\ContactController::index
+
+login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+registration:
+    path: /registration
+    controller: App\Controller\RegistrationController::register
+
+account:
+    path: /account
+    controller: App\Controller\AccountController::index
+
+logout:
+    path: /logout
+
+board_new:
+    path: /board/new
+    controller: App\Controller\BoardController::new

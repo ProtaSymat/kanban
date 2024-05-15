@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Step;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Repository\BoardRepository;
+
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,8 +30,23 @@ class Board
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'boards')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    /**
+     * @var Collection<int, Step>
+     */
     #[ORM\OneToMany(mappedBy: 'board', targetEntity: Step::class)]
-    private $steps;
+    private Collection $steps;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+        $this->steps = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -82,10 +101,43 @@ class Board
         return $this;
     }
 
-    public function addStep(Step $step): static
+    /**
+     * @return Collection<int, Step>
+     */
+    public function getSteps(): Collection
     {
-        $this->steps[] = $step;
+        return $this->steps;
+    }
 
+    public function addStep(Step $step): self
+    {
+        if (!$this->steps->contains($step)) {
+            $this->steps[] = $step;
+            $step->setBoard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStep(Step $step): self
+    {
+        if ($this->steps->removeElement($step)) {
+            if ($step->getBoard() === $this) {
+                $step->setBoard(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
         return $this;
     }
 }

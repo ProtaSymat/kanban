@@ -1,11 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Step{% endblock %}
+{% block title %}Ajouter une liste{% endblock %}
 
 {% block body %}
-    <h1>Create new Step</h1>
+<section class="bg-transparent">
+<div class="container py-5">
+    <a href="{{ path('app_board_index') }}" class=" btn btn-info"><i class="fa fa-arrow-left"></i> Précédent</a>
+    <h1>Ajouter une Liste</h1>
 
     {{ include('step/_form.html.twig') }}
-
-    <a href="{{ path('app_step_index') }}">back to list</a>
+        </div>
+    </section>
 {% endblock %}
+

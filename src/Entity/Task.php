@@ -1,8 +1,11 @@
 <?php
-
 namespace App\Entity;
 
+use App\Repository\StepRepository;
 use App\Repository\TaskRepository;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,6 +20,12 @@ class Task
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $priority = null;
+
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
@@ -27,7 +36,15 @@ class Task
     private ?\DateTimeInterface $updated_at = null;
 
     #[ORM\ManyToOne(targetEntity: Step::class, inversedBy: 'tasks')]
-    private $step;
+    private ?Step $step = null;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+    }
+
+    // ... autres méthodes ...
 
     public function getId(): ?int
     {
@@ -42,7 +59,28 @@ class Task
     public function setTitle(string $title): static
     {
         $this->title = $title;
+        return $this;
+    }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getPriority(): ?string
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(?string $priority): static
+    {
+        $this->priority = $priority;
         return $this;
     }
 
@@ -54,7 +92,6 @@ class Task
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -66,7 +103,6 @@ class Task
     public function setCreatedAt(\DateTimeInterface $created_at): static
     {
         $this->created_at = $created_at;
-
         return $this;
     }
 
@@ -78,7 +114,6 @@ class Task
     public function setUpdatedAt(\DateTimeInterface $updated_at): static
     {
         $this->updated_at = $updated_at;
-
         return $this;
     }
 
@@ -90,7 +125,7 @@ class Task
     public function setStep(?Step $step): static
     {
         $this->step = $step;
-
         return $this;
     }
 }
+

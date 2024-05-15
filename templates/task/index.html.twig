@@ -8,26 +8,20 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Title</th>
+                <th>Nom de la tâche</th>
                 <th>Description</th>
-                <th>Priority</th>
+                <th>Priorité</th>
                 <th>Status</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for task in tasks %}
             <tr>
-                <td>{{ task.id }}</td>
                 <td>{{ task.title }}</td>
                 <td>{{ task.description }}</td>
                 <td>{{ task.priority }}</td>
                 <td>{{ task.status }}</td>
-                <td>{{ task.createdAt ? task.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ task.updatedAt ? task.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_task_show', {'id': task.id}) }}">show</a>
                     <a href="{{ path('app_task_edit', {'id': task.id}) }}">edit</a>

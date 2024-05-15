@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Form;
 
 use App\Entity\Identity;
@@ -14,19 +13,9 @@ class IdentityType extends AbstractType
         $builder
             ->add('name')
             ->add('firstName')
-            ->add('birthDate', null, [
-                'widget' => 'single_text',
-            ])
+            ->add('birthDate')
             ->add('email')
-            ->add('phone')
-            // ->add('status')
-            // ->add('createdAt', null, [
-            //     'widget' => 'single_text',
-            // ])
-            // ->add('updatedAt', null, [
-            //     'widget' => 'single_text',
-            // ])
-        ;
+            ->add('phone');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

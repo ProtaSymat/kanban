@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+
+<section class="container my-5"> 
+
+<div class="col-lg-12 form-box">
+    <h3>Un souci sur vos tâches ? Un bug ? Des idées à proposer ?</h3>
+    <p>Contactez-nous au 0606060606 pour communiquer avec nous, ou remplissez le formulaire de réservation ci-dessous.</p>
+    <form id="bookingForm">
+        <div class="form-row">
+            <div class="form-group col-md-4 mb-2">
+                <input type="text" class="form-control" name="Name" placeholder="Votre nom:" required>
+            </div>
+            <div class="form-group col-md-4 mb-2">
+                <input type="text" class="form-control" name="Phone" placeholder="Numéro de téléphone:" required>
+            </div>
+            <div class="form-group col-md-4 mb-2">
+                <input type="email" class="form-control" name="Email" placeholder="Adresse Email:" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6  mb-2">
+                <select class="form-control" name="Type">
+                    <option selected disabled>Date:</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6 mb-2">
+                <select class="form-control" name="Type">
+                    <option selected disabled>Heure de réservation:</option>
+                </select>
+            </div>
+        </div>
+        
+        <textarea name="Message" class="form-control" placeholder="Avez-vous une question ou un commentaire pour notre équipe ?" rows="3"></textarea>
+        <button type="submit" class="btn btn-primary mt-3">Réserver maintenant !</button>
+    </form>
+</div>
+</section>
+<div class="map-box w-100">
+<iframe class="w-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10679.778320835052!2d-2.089168826847097!3d47.99545816208519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x480faa30efd59e83%3A0xd8109be772500134!2sTr%C3%A9lo%2C%2035380%20Pl%C3%A9lan-le-Grand!5e0!3m2!1sfr!2sfr!4v1715464269419!5m2!1sfr!2sfr" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+{% endblock %}

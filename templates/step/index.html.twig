@@ -1,41 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Step index{% endblock %}
+{% block title %}Voir Board{% endblock %}
 
 {% block body %}
-    <h1>Step index</h1>
+    <h1>Voir Board</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Position</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for step in steps %}
-            <tr>
-                <td>{{ step.id }}</td>
-                <td>{{ step.title }}</td>
-                <td>{{ step.position }}</td>
-                <td>{{ step.createdAt ? step.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ step.updatedAt ? step.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_step_show', {'id': step.id}) }}">show</a>
-                    <a href="{{ path('app_step_edit', {'id': step.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
+    <p><strong>Titre:</strong> {{ board.title }}</p>
+    <p><strong>Status:</strong> {{ board.status }}</p>
+
+    <h2>Ajouter un Step/Liste</h2>
+    <a href="{{ path('app_step_new', {'boardId': board.id}) }}" class="btn btn-primary">Ajouter un Step/Liste</a>
+
+    <h2>Steps/Listes</h2>
+    {% if board.steps is not empty %}
+        {% for step in board.steps %}
+            <h3>{{ step.title }}</h3>
+            <p>Position: {{ step.position }} - Statut: {{ step.status }}</p>
+            <ul>
+                {% if step.tasks is not empty %}
+                    {% for task in step.tasks %}
+                        <li>{{ task.title }} - {{ task.status }}</li>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucune tâche trouvée pour cette step.</p>
+                {% endif %}
+            </ul>
         {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_step_new') }}">Create new</a>
+    {% else %}
+        <p>Aucune Step/Liste trouvée pour ce board.</p>
+    {% endif %}
 {% endblock %}

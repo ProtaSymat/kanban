@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/identity')]
+#[Route('/identity', name: 'identity')]
 class IdentityController extends AbstractController
 {
     #[Route('/', name: 'app_identity_index', methods: ['GET'])]

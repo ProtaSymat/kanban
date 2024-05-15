@@ -1,9 +1,12 @@
 <?php
-
 namespace App\Form;
 
 use App\Entity\Task;
+use App\Entity\Step;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,17 +15,14 @@ class TaskType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
-            ->add('description')
-            ->add('priority')
-            ->add('status')
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('updated_at', null, [
-                'widget' => 'single_text',
-            ])
-        ;
+            ->add('title', TextType::class)
+            ->add('description', TextareaType::class, ['required' => false])
+            ->add('priority', TextType::class, ['required' => false])
+            ->add('status', TextType::class)
+            ->add('step', EntityType::class, [
+                'class' => Step::class,
+                'choice_label' => 'title',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

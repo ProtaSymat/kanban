@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\StepRepository;
@@ -19,10 +18,10 @@ class Step
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $position = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -37,9 +36,21 @@ class Step
     #[ORM\OneToMany(targetEntity: Board::class, mappedBy: 'step')]
     private Collection $board_id;
 
+    /**
+     * @var Collection<int, Task>
+     */
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'step')]
+    private Collection $tasks;
+
+    #[ORM\ManyToOne(targetEntity: Board::class, inversedBy: 'steps')]
+    private ?Board $board = null;
+
     public function __construct()
     {
         $this->board_id = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
     }
 
     public function getId(): ?int
@@ -55,7 +66,6 @@ class Step
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -67,7 +77,6 @@ class Step
     public function setPosition(string $position): static
     {
         $this->position = $position;
-
         return $this;
     }
 
@@ -79,7 +88,6 @@ class Step
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -91,7 +99,6 @@ class Step
     public function setCreatedAt(\DateTimeInterface $created_at): static
     {
         $this->created_at = $created_at;
-
         return $this;
     }
 
@@ -103,6 +110,41 @@ class Step
     public function setUpdatedAt(\DateTimeInterface $updated_at): static
     {
         $this->updated_at = $updated_at;
+        return $this;
+    }
+
+    public function getBoard(): ?Board
+    {
+        return $this->board;
+    }
+
+    public function setBoard(?Board $board): static
+    {
+        $this->board = $board;
+        return $this;
+    }
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setStep($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            if ($task->getStep() === $this) {
+                $task->setStep(null);
+            }
+        }
 
         return $this;
     }

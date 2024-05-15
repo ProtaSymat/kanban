@@ -8,11 +8,7 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ task.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
+                <th>Nom de la tâche</th>
                 <td>{{ task.title }}</td>
             </tr>
             <tr>
@@ -20,20 +16,12 @@
                 <td>{{ task.description }}</td>
             </tr>
             <tr>
-                <th>Priority</th>
+                <th>Priorité</th>
                 <td>{{ task.priority }}</td>
             </tr>
             <tr>
                 <th>Status</th>
                 <td>{{ task.status }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ task.createdAt ? task.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Updated_at</th>
-                <td>{{ task.updatedAt ? task.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>
     </table>
